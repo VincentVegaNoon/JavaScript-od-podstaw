@@ -161,11 +161,119 @@ this //obiekt globalny
 
 const fn = function() {
     // this.a = 5;
-    console.log(this)
+    console.log(this.name)
 }
 const obj = {
     name: "Adam",
-    fn:fn
+    showName: fn
 }
-fn()
-obj.fn
+const fun = fn
+// fn()
+obj.showName()
+
+const outside = obj.showName;
+outside()
+
+document.addEventListener('click', function() {
+    console.log(this);
+    const inside = function() {
+        'use strict'
+        console.log(this)
+    }
+    inside()
+})
+
+//////
+// const thisExample = function() {
+//     console.log(this.example, this)
+//     const inside = function() {
+//         console.log(this.example, this)
+//     }
+//     inside()
+// }
+
+// thisExample()
+
+const user = {
+    age: 45,
+    showName() {
+        console.log(this.age)
+    },
+    showName2: function() {
+        console.log(this.age);
+    }
+}
+user.showName2()
+
+const stefan = {
+    age: 20,
+    showName: user.showName
+}
+stefan.showName()
+
+////// Problem utraty wiazania
+const szarik = {
+    children: ['fafik', 'żaba'],
+    showChildren: function() {
+        this.children.forEach(function(child, index) {
+            console.log(this.children[index]);
+        }.bind(this));
+    }
+}
+szarik.showChildren()
+////////////////
+class Cat {
+    constructor(color) {
+        this._color = color
+    }
+    //metafora pobierajaca zawartosc _color
+    getColor() {
+        return this._color
+    }
+    setColor(value) {
+        if(typeof value === 'string') {
+            this._color = value;
+    } else {
+        console.log('wartosc nieprawidlowa')
+    }
+}}
+const kotek = new Cat('czarny')
+
+class Dog {
+    constructor(name, color) {
+        this.name = name;
+        let _color = color;
+        this.getColor = () => color;
+        this.setColor = (color) => _color = color;
+    }
+}
+
+const fafik = new Dog('fafik', "brazowy")
+
+class Car2 {
+    constructor(name, counter = 100000, year = 2000) {
+        this.name = name;
+        let _counter = counter
+        let _year = year;
+        let _changeNumber = 0;
+
+        // this.getYear = function() {
+        //     return _year;
+        // } 
+        this.getYear = () => _year;
+
+        this.setCounter = function(value) {
+            _changeNumber++;
+            return _counter = value;
+        }
+        this.getCounter = function() {
+            if(_changeNumber) alert(`uwazaj licznik zmieniony ${_changeNumber}`);
+            return _counter;
+        }
+        this.showCarAge = function(year) {
+            return year - _year;
+        }
+    }
+}
+
+const polonez2 = new Car2('polonez caro', 25000, 2009);
